@@ -1,4 +1,4 @@
-package com.mysotre.store;
+package com.mystore.store;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

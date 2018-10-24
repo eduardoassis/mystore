@@ -1,4 +1,4 @@
-package com.mysotre.store;
+package com.mystore.store;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
