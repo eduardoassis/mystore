@@ -1,6 +1,7 @@
 package com.mystore.store.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -15,6 +16,9 @@ public class Product {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
     private Product parent;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "product")
+    private List<Image> images;
 
     public void setId(Long id) {
         this.id = id;
@@ -46,5 +50,13 @@ public class Product {
 
     public Product getParent() {
         return parent;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }
