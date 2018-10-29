@@ -5,10 +5,7 @@ import com.mystore.store.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -50,4 +47,19 @@ public class ProductController {
 
         return Response.noContent().build();
     }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteProduct(@PathParam("id") Long id) {
+
+        Optional<Product> product = productRepository.findById(id);
+
+        if (!product.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        productRepository.delete(product.get());
+
+        return Response.ok().build();
+     }
 }
