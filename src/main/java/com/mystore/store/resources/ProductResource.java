@@ -1,4 +1,4 @@
-package com.mystore.store.controllers;
+package com.mystore.store.resources;
 
 import com.mystore.store.model.Product;
 import com.mystore.store.repository.ProductRepository;
@@ -19,10 +19,13 @@ import java.util.Optional;
 @XmlRootElement(name = "products")
 @Component
 @Path("/products")
-public class ProductController {
+public class ProductResource {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ImageResource imageResource;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,4 +65,10 @@ public class ProductController {
 
         return Response.ok().build();
      }
+
+     @Path("{idProduct}/images")
+     public ImageResource getImageResource() {
+        return this.imageResource;
+     }
+
 }

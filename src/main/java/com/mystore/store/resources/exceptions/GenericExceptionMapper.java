@@ -1,4 +1,4 @@
-package com.mystore.store.controllers.exceptions;
+package com.mystore.store.resources.exceptions;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

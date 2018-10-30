@@ -1,6 +1,6 @@
 package com.mystore.store;
 
-import com.mystore.store.controllers.ProductController;
+import com.mystore.store.resources.ProductResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +9,6 @@ public class JerseyConfig extends ResourceConfig
 {
     public JerseyConfig()
     {
-        register(ProductController.class);
+        register(ProductResource.class);
     }
 }
