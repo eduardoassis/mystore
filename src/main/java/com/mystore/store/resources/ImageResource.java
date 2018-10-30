@@ -5,13 +5,11 @@ import com.mystore.store.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ImageResource {
@@ -24,6 +22,20 @@ public class ImageResource {
     public Response listImageByProduct(@PathParam("idProduct") Long id) {
         List<Image> images = imageRepository.findByProductId(id);
         return Response.ok().entity(images).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response delete(@PathParam("idProduct") Long idProduct, @PathParam("id") Long id) {
+        Optional<Image> image = imageRepository.findById(id);
+
+        if (!image.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        imageRepository.delete(image.get());
+
+        return Response.noContent().build();
     }
 
 }
