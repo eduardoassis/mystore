@@ -4,13 +4,12 @@ import com.mystore.store.model.Product;
 import com.mystore.store.repository.ProductRepository;
 import com.mystore.store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
-@Component
+@Service
 public class ProuctServiceImpl implements ProductService {
 
     @Autowired

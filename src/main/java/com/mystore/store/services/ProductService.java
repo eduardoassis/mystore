@@ -1,9 +1,10 @@
 package com.mystore.store.services;
 
 import com.mystore.store.model.Product;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 
 public interface ProductService {
-    public Product update(Product productWithNewValues) throws EntityNotFoundException;
+    Product update(Product productWithNewValues) throws EntityNotFoundException;
 }

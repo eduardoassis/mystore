@@ -1,11 +1,9 @@
 package com.mystore.store.rest;
 
-import com.google.gson.GsonBuilder;
 import com.mystore.store.StoreApplication;
 import com.mystore.store.model.Product;
 import com.mystore.store.repository.ProductRepository;
 import com.mystore.store.resources.ProductResource;
-import io.restassured.mapper.factory.GsonObjectMapperFactory;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -15,8 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import java.util.List;
 
 import static io.restassured.RestAssured.with;
 

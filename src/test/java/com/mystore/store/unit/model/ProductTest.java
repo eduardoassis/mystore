@@ -4,6 +4,7 @@ import com.mystore.store.model.Image;
 import com.mystore.store.model.Product;
 import com.mystore.store.repository.ImageRepository;
 import com.mystore.store.repository.ProductRepository;
+import com.mystore.store.services.ProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +29,19 @@ public class ProductTest {
     @Autowired
     private ImageRepository imageRepository;
 
-    private Product productSaved = new Product();
-    private Product productToDelete = new Product();
+    @Autowired
+    private ProductService productService;
+
+    private Product productSaved;
+    private Product productToDelete;
+    private Product parentProduct;
+    private Product productToUpdate;
 
     @Before
     public void beforeAll() {
 
+        productRepository.deleteAll();
+        imageRepository.deleteAll();
 
         productSaved = new Product();
         productSaved.setName("Saved product");
@@ -48,6 +56,23 @@ public class ProductTest {
         productToDelete.setDescription("Product saved before the tests to be deleted");
         productToDelete.setImages(new ArrayList<Image>(){{ add(i); }});
         productRepository.save(productToDelete);
+
+        parentProduct = new Product();
+
+        parentProduct.setName("Parent product");
+        parentProduct.setDescription("Product base");
+        productRepository.save(parentProduct);
+        assertNotNull(parentProduct.getId());
+
+        productToUpdate = new Product();
+
+        productToUpdate.setName("Product with parent");
+        productToUpdate.setDescription("Child product");
+        productToUpdate.setParent(parentProduct);
+        productToUpdate.setImages(new ArrayList<Image>(){{ add(i); }});
+        productRepository.save(productToUpdate);
+        assertNotNull(parentProduct.getId());
+
     }
 
     @Test
@@ -130,6 +155,28 @@ public class ProductTest {
         assertNotNull(product.getImages());
         assertFalse(product.getImages().isEmpty());
         assertNotNull(product.getImages().get(0).getId());
+
+    }
+
+    @Test
+    public void shouldUpdateProduct() {
+
+        final String newName = "New name";
+        final String newDescription = "New description";
+
+        Product product = new Product();
+        product.setId(productToUpdate.getId());
+        product.setName(newName);
+        product.setDescription(newDescription);
+
+        Product p = productService.update(product);
+
+        assertNotNull(p);
+        assertEquals(product.getId(), p.getId());
+        assertEquals(product.getName(), p.getName());
+        assertEquals(product.getDescription(), p.getDescription());
+        assertNull(p.getParent());
+        assertNull(p.getImages());
 
     }
 
