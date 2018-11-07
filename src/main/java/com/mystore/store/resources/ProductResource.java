@@ -2,9 +2,11 @@ package com.mystore.store.resources;
 
 import com.mystore.store.model.Product;
 import com.mystore.store.repository.ProductRepository;
+import com.mystore.store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,6 +29,9 @@ public class ProductResource {
 
     @Autowired
     private ImageResource imageResource;
+
+    @Autowired
+    private ProductService productService;
 
     public static final String BASE_URI_PRODUCT_RESOURCE = "/products";
 
@@ -70,7 +75,7 @@ public class ProductResource {
      }
 
      @POST
-     @Consumes("application/json")
+     @Consumes(MediaType.APPLICATION_JSON)
      public Response createProduct(Product product) {
 
         if (product == null) {
@@ -80,6 +85,24 @@ public class ProductResource {
         Product p = productRepository.save(product);
 
         return Response.created(URI.create(BASE_URI_PRODUCT_RESOURCE + "/" + p.getId())).build();
+     }
+
+     @PUT
+     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
+     public Response updateProduct(Product product) {
+
+        if (product == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        try {
+            Product p = productService.update(product);
+            return Response.ok().entity(p).build();
+         } catch (EntityNotFoundException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
      }
 
      @Path("{idProduct}/images")
