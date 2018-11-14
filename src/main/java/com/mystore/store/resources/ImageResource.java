@@ -1,7 +1,9 @@
 package com.mystore.store.resources;
 
 import com.mystore.store.model.Image;
+import com.mystore.store.model.Product;
 import com.mystore.store.repository.ImageRepository;
+import com.mystore.store.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,11 @@ public class ImageResource {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    public static final String BASE_URI_RESOURCE = "/images";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

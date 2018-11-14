@@ -33,7 +33,7 @@ public class ProductResource {
     @Autowired
     private ProductService productService;
 
-    public static final String BASE_URI_PRODUCT_RESOURCE = "/products";
+    public static final String BASE_URI_RESOURCE = "/products";
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,7 +84,7 @@ public class ProductResource {
 
         Product p = productRepository.save(product);
 
-        return Response.created(URI.create(BASE_URI_PRODUCT_RESOURCE + "/" + p.getId())).build();
+        return Response.created(URI.create(BASE_URI_RESOURCE + "/" + p.getId())).build();
      }
 
      @PUT
