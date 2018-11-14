@@ -34,7 +34,7 @@ public class ImageResourceTest {
     @Autowired
     private ImageRepository imageRepository;
 
-    private Product product, productToUpdate, productToDelete;
+    private Product product;
     private Image imageToUpdate, imageToDelete;
 
     @Before
@@ -66,6 +66,33 @@ public class ImageResourceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode());
 
+    }
+
+    @Test
+    public void shouldDeleteImage() {
+
+        Image image = product.getImages().get(0);
+
+        with()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .delete(ProductResource.BASE_URI_RESOURCE + "/" + product.getId() + ImageResource.BASE_URI_RESOURCE + "/" + image.getId() )
+                .then()
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    public void shouldFailWhenTryToDeleteAnInexistentImage() {
+
+        Long idImage = 10000l;
+
+        with()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .delete(ProductResource.BASE_URI_RESOURCE + "/" + product.getId() + ImageResource.BASE_URI_RESOURCE + "/" + idImage )
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
 }

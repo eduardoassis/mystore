@@ -33,16 +33,18 @@ public class ImageResource {
 
     @DELETE
     @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("idProduct") Long idProduct, @PathParam("id") Long id) {
         Optional<Image> image = imageRepository.findById(id);
 
         if (!image.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).build();
         }
 
         imageRepository.delete(image.get());
 
-        return Response.noContent().build();
+        return Response.noContent().type(MediaType.APPLICATION_JSON).build();
     }
 
 }

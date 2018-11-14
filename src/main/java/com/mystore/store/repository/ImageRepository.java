@@ -15,5 +15,6 @@ import java.util.List;
                 query="SELECT image FROM Image image WHERE image.product.id = :productId")
 })
 public interface ImageRepository extends JpaRepository<Image, Long> {
+        @Transactional
         List<Image> findByProductId(@Param("productId") Long productId);
 }
