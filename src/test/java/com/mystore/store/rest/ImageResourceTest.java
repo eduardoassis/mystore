@@ -19,9 +19,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.with;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 @SpringBootTest(classes = StoreApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -95,4 +98,23 @@ public class ImageResourceTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    @Test
+    public void shouldUpdateAnImage() {
+
+        final String newType = "test";
+        Image image = product.getImages().get(0);
+        image.setType(newType);
+
+        with()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(image)
+                .when()
+                .put(ProductResource.BASE_URI_RESOURCE + "/" + product.getId() + ImageResource.BASE_URI_RESOURCE + "/" + image.getId())
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+
+        Optional<Image> i = imageRepository.findById(image.getId());
+        assertTrue(i.isPresent());
+        assertEquals(newType, i.get().getType());
+    }
 }
