@@ -1,5 +1,6 @@
 package com.mystore.store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mystore.store.model.Product;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ public class Image {
 
     private String type;
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "product_id")
     private Product product;

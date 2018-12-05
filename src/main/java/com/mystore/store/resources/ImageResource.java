@@ -47,4 +47,23 @@ public class ImageResource {
         return Response.noContent().type(MediaType.APPLICATION_JSON).build();
     }
 
+    @PUT
+    @Path("/{id}")
+    public Response update(@PathParam("idProduct") Long idProduct, Image image) {
+
+        Optional<Product> p = productRepository.findById(idProduct);
+        Optional<Image> i = imageRepository.findById(image.getId());
+
+        if (!p.isPresent() && !i.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Image currentImage = i.get();
+        currentImage.setType(image.getType());
+
+        imageRepository.saveAndFlush(currentImage);
+
+        return Response.ok().entity(currentImage).build();
+    }
+
 }

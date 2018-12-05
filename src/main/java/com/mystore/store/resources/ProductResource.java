@@ -82,7 +82,7 @@ public class ProductResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Product p = productRepository.save(product);
+        Product p = productService.create(product);
 
         return Response.created(URI.create(BASE_URI_RESOURCE + "/" + p.getId())).build();
      }

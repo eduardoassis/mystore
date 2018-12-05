@@ -1,6 +1,7 @@
 package com.mystore.store.services.impl;
 
 import com.mystore.store.model.Product;
+import com.mystore.store.repository.ImageRepository;
 import com.mystore.store.repository.ProductRepository;
 import com.mystore.store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,25 @@ public class ProuctServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Override
+    public Product create(Product product) {
+
+        Product p = productRepository.save(product);
+
+        Optional.ofNullable(p.getImages()).ifPresent(images -> {
+            images.stream().forEach(image -> {
+                image.setProduct(p);
+                imageRepository.saveAndFlush(image);
+            });
+        });
+
+        return p;
+    }
 
     @Override
     public Product update(Product productWithNewValues) throws EntityNotFoundException{

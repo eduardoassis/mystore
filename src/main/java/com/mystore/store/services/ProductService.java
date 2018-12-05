@@ -6,5 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityNotFoundException;
 
 public interface ProductService {
+
+    Product create(Product product);
     Product update(Product productWithNewValues) throws EntityNotFoundException;
 }
