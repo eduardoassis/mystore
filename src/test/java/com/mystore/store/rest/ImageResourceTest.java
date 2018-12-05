@@ -14,16 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.with;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
@@ -38,7 +35,7 @@ public class ImageResourceTest {
     private ImageRepository imageRepository;
 
     private Product product;
-    private Image imageToUpdate, imageToDelete;
+    private Image image;
 
     @Before
     public void before() {
@@ -47,14 +44,20 @@ public class ImageResourceTest {
         product.setDescription("Product test");
         product.setName("Product test");
 
-        Image image = new Image();
+        Image i = new Image();
+        i.setType("png");
+        i.setProduct(product);
+
+        image = new Image();
         image.setType("png");
         image.setProduct(product);
 
         product.setImages(new ArrayList<Image>(){{
+            add(i);
             add(image);
         }});
         productRepository.saveAndFlush(product);
+        imageRepository.saveAndFlush(i);
         imageRepository.saveAndFlush(image);
     }
 
@@ -116,5 +119,20 @@ public class ImageResourceTest {
         Optional<Image> i = imageRepository.findById(image.getId());
         assertTrue(i.isPresent());
         assertEquals(newType, i.get().getType());
+    }
+
+    @Test
+    public void shouldFindAnImageById() {
+
+        final Long id = image.getId();
+        final Long productId = image.getProduct().getId();
+
+        with()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(ProductResource.BASE_URI_RESOURCE + "/" + productId + ImageResource.BASE_URI_RESOURCE + "/" + id)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+
     }
 }
