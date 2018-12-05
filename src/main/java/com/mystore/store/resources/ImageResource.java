@@ -6,6 +6,7 @@ import com.mystore.store.repository.ImageRepository;
 import com.mystore.store.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -49,6 +50,8 @@ public class ImageResource {
 
     @PUT
     @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("idProduct") Long idProduct, Image image) {
 
         Optional<Product> p = productRepository.findById(idProduct);
@@ -60,10 +63,27 @@ public class ImageResource {
 
         Image currentImage = i.get();
         currentImage.setType(image.getType());
+        currentImage.setProduct(p.get());
 
         imageRepository.saveAndFlush(currentImage);
 
-        return Response.ok().entity(currentImage).build();
+        return Response.ok(currentImage).build();
+    }
+
+
+    @GET
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findById(@PathParam("idProduct") Long idProduct, @PathParam("id") Long id) {
+
+        Optional<Image> image = imageRepository.findById(id);
+
+        if (!image.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).build();
+        }
+
+        return Response.ok(image).type(MediaType.APPLICATION_JSON).build();
     }
 
 }

@@ -15,7 +15,7 @@ public class Image {
     private String type;
 
     @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "product_id")
     private Product product;
 
