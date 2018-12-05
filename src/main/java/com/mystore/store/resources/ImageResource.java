@@ -52,13 +52,18 @@ public class ImageResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("idProduct") Long idProduct, Image image) {
+    public Response update(@PathParam("idProduct") Long idProduct, @PathParam("id") Long id, Image image) {
 
         Optional<Product> p = productRepository.findById(idProduct);
-        Optional<Image> i = imageRepository.findById(image.getId());
+        Optional<Image> i = imageRepository.findById(id);
 
-        if (!p.isPresent() && !i.isPresent()) {
+        if (!p.isPresent()
+                || !i.isPresent()
+                || i.get().getProduct() == null
+                || i.get().getProduct().getId() != idProduct) {
+
             return Response.status(Response.Status.NOT_FOUND).build();
+
         }
 
         Image currentImage = i.get();
@@ -80,7 +85,7 @@ public class ImageResource {
         Optional<Image> image = imageRepository.findById(id);
 
         if (!image.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
         }
 
         return Response.ok(image).type(MediaType.APPLICATION_JSON).build();

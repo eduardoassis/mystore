@@ -17,10 +17,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.with;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -122,6 +124,27 @@ public class ImageResourceTest {
     }
 
     @Test
+    public void shouldNotUpdateANonExistentImage() {
+
+        final String newType = "test";
+        Image image = product.getImages().get(0);
+        image.setType(newType);
+        final Long id = getLastIdPlusOne();
+
+        with()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(image)
+                .when()
+                .put(ProductResource.BASE_URI_RESOURCE + "/" + product.getId() + ImageResource.BASE_URI_RESOURCE + "/" + id)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+
+        Optional<Image> i = imageRepository.findById(image.getId());
+        assertTrue(i.isPresent());
+        assertNotEquals(newType, i.get().getType());
+    }
+
+    @Test
     public void shouldFindAnImageById() {
 
         final Long id = image.getId();
@@ -134,5 +157,25 @@ public class ImageResourceTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
 
+    }
+
+    @Test
+    public void shouldNotFindANonExistentImageById() {
+
+        final Long id = getLastIdPlusOne();
+        final Long productId = image.getProduct().getId();
+
+        with()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(ProductResource.BASE_URI_RESOURCE + "/" + productId + ImageResource.BASE_URI_RESOURCE + "/" + id)
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+
+    }
+
+    private Long getLastIdPlusOne() {
+        List<Image> images = imageRepository.findAll();
+        return (images.get(images.size() - 1).getId() + 1);
     }
 }
